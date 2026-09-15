@@ -43,7 +43,7 @@ describe('layout', () => {
     const box = await headline.boundingBox();
     expect(box!.y + box!.height).toBeLessThan(768);
     const buttonBox = await button.boundingBox();
-    expect(buttonBox!.y).toBeLessThan(768 * 1.15);
+    expect(buttonBox!.y + buttonBox!.height).toBeLessThanOrEqual(768);
     await page.context().close();
   });
 
@@ -155,6 +155,28 @@ describe('request form', () => {
     await page.click('#request button[type="submit"]');
     const status = page.locator('#request [role="status"]');
     await status.locator('a[href^="mailto:support@rainpuddleworks.com"]').waitFor();
+    expect(await page.locator('#rf-name').inputValue()).toBe('Jordan Lee');
+    await page.context().close();
+  });
+
+  it('shows the reason next to the field when Formspree rejects a value', async () => {
+    const page = await openPage('/');
+    await page.route('https://forms.example.test/**', (route) =>
+      route.fulfill({
+        status: 422,
+        contentType: 'application/json',
+        body: JSON.stringify({ errors: [{ field: 'email', code: 'TYPE_EMAIL', message: 'should be an email' }] }),
+      }),
+    );
+    await page.evaluate(() => {
+      document.querySelector<HTMLFormElement>('#request form')!.dataset.endpoint = 'https://forms.example.test/f/demo';
+    });
+    await page.fill('#rf-name', 'Jordan Lee');
+    await page.fill('#rf-email', 'jordan@example.com');
+    await page.fill('#rf-website', 'example.com');
+    await page.click('#request button[type="submit"]');
+    await page.locator('#rf-email-error').waitFor({ state: 'visible' });
+    expect(await page.locator('#rf-email').getAttribute('aria-invalid')).toBe('true');
     expect(await page.locator('#rf-name').inputValue()).toBe('Jordan Lee');
     await page.context().close();
   });

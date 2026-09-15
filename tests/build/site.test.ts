@@ -174,7 +174,23 @@ describe('homepage: Website Rescue', () => {
     expect(t).toContain('It may just need to be rescued.');
     expect(t).toContain('$349 flat');
     expect(t).toContain('Free site review. You approve the repair scope before paying anything.');
-    expect(promise!.querySelector('a.button--primary[href="#request"]')).not.toBeNull();
+    const button = promise!.querySelector('a.button--primary[href="#request"]');
+    expect(button && text(button)).toBe('Request a free site review');
+    const offer = text(promise!.querySelector('.promise__offer')!);
+    expect(offer).toContain('Fixed-price website repair for small businesses in Oregon.');
+    expect(offer).toMatch(/within 3 business days/);
+  });
+
+  it('asks for a free site review in the header', () => {
+    const cta = home().querySelector('header .site-header__cta');
+    expect(cta && text(cta)).toBe('Request a free site review');
+    expect(cta?.getAttribute('href')).toBe('#request');
+  });
+
+  it('keeps other services out of the main navigation, and in the footer', () => {
+    expect(home().querySelector('header nav a[href="/services/"]')).toBeNull();
+    const footerLink = home().querySelector('footer a[href="/services/"]');
+    expect(footerLink && text(footerLink)).toBe('Other website work');
   });
 
   it('has one primary call to action, always leading to the request form', () => {
@@ -235,6 +251,8 @@ describe('homepage: Website Rescue', () => {
 
   it('describes a good candidate and the platforms we work on', () => {
     const t = text(home().querySelector('#good-fit')!);
+    expect(text(home().querySelector('#good-fit h2')!)).toBe('Website Rescue is a good fit when…');
+    expect(home().querySelectorAll('#good-fit .fit__maybes li').length).toBeLessThanOrEqual(3);
     expect(t).toContain('Your website basically works');
     expect(t).toContain("That's exactly what Website Rescue is for.");
     for (const platform of ['WordPress', 'Squarespace', 'Wix', 'Weebly', 'Shopify', 'hand-coded']) {
@@ -255,23 +273,38 @@ describe('homepage: Website Rescue', () => {
       'Paid themes, plugins, software, or licenses',
     ]);
     const t = text(section);
-    expect(t).toContain("If your website needs something larger, we'll tell you before you pay for Website Rescue.");
-    expect(t).toContain('Website Rescue is never used to push an unnecessary rebuild.');
+    expect(t).toContain("we'll tell you. Website Rescue is never used to push an unnecessary rebuild.");
   });
 
-  it('introduces the business as locally owned, without inventing a person', () => {
-    const t = text(home().querySelector('#about')!);
-    expect(t).toContain('Lane County, Oregon');
-    expect(t).toContain("We don't believe every dated website needs to be replaced.");
-    expect(t).toContain("If the site you already have can be repaired economically, we'll recommend repair.");
-    expect(home().querySelector('#about img')).toBeNull();
+  it('names the owner and promises direct contact, high on the page', () => {
+    const about = home().querySelector('#about')!;
+    const t = text(about);
+    expect(t).toContain('A small repair shop for small-business websites.');
+    expect(t).toContain('Owned and operated by Brandon McPherson');
+    expect(t).toContain('Rainpuddle LLC · Lane County, Oregon');
+    expect(t).toContain("You'll work directly with the person reviewing and repairing your website.");
+    expect(about.querySelector('img')).toBeNull();
+    const ids = home().querySelectorAll('main section[id]').map((el) => el.getAttribute('id'));
+    expect(ids.indexOf('about')).toBeLessThan(ids.indexOf('fixes'));
+  });
+
+  it('does not keep repeating the same reassurances', () => {
+    const t = body();
+    const count = (pattern: RegExp) => (t.match(pattern) ?? []).length;
+    expect(count(/before (paying anything|you pay|work begins)|nothing is due until/gi)).toBeLessThanOrEqual(3);
+    expect(count(/rebuild/gi)).toBeLessThanOrEqual(4);
+    expect(t).not.toContain("We don't believe every dated website needs to be replaced.");
   });
 
   it('answers common questions in a simple FAQ', () => {
     const faqs = home().querySelectorAll('#faq details');
     expect(faqs.length).toBeGreaterThanOrEqual(5);
     expect(faqs.length).toBeLessThanOrEqual(7);
-    for (const d of faqs) expect(d.querySelector('summary')).not.toBeNull();
+    for (const d of faqs) {
+      expect(d.querySelector('summary')).not.toBeNull();
+      const answer = d.querySelector('.faq__answer')!;
+      expect(answer.querySelectorAll('p').length, text(d.querySelector('summary')!)).toBe(1);
+    }
   });
 
   it('ends with the request form and the closing offer', () => {
@@ -289,6 +322,10 @@ describe('homepage: Website Rescue', () => {
       expect(form.querySelector(`label[for="${id}"]`), `unlabeled ${name}`).not.toBeNull();
     }
     expect(form.querySelector('input[type="hidden"][name="service"]')?.getAttribute('value')).toBe('rescue');
+    expect(form.getAttribute('action')).toBe('https://formspree.io/f/xppzvnyv');
+    expect(form.getAttribute('method')).toBe('post');
+    expect(form.hasAttribute('enctype')).toBe(false);
+    expect(form.getAttribute('data-endpoint')).toBe('https://formspree.io/f/xppzvnyv');
     const trap = form.querySelector('[name="company"]')!;
     expect(trap.getAttribute('tabindex')).toBe('-1');
     expect(trap.closest('[aria-hidden="true"]')).not.toBeNull();

@@ -1,7 +1,9 @@
 import {
   buildMailto,
   buildPayload,
+  errorsFromFormspree,
   isSpam,
+  SEND_FAILED_MESSAGE,
   validateRequest,
   type FieldErrors,
   type RequestFields,
@@ -110,20 +112,35 @@ async function handleSubmit(form: HTMLFormElement, event: SubmitEvent) {
     button.textContent = 'Sending…';
   }
 
+  const failed = (message: string | null) => {
+    if (!message) {
+      setStatus(form, 'error', '');
+      return;
+    }
+    setStatus(form, 'error', [
+      document.createTextNode(`${message} `),
+      emailLink(email, buildMailto(email, fields)),
+      document.createTextNode('.'),
+    ]);
+  };
+
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(buildPayload(fields)),
     });
-    if (!response.ok) throw new Error(`Form service returned ${response.status}`);
-    showThanks(form);
+    if (response.ok) {
+      showThanks(form);
+      return;
+    }
+    const { fieldErrors, formError } = errorsFromFormspree(await response.json().catch(() => null));
+    showErrors(form, fieldErrors);
+    const firstInvalid = FIELDS.find((key) => fieldErrors[key]);
+    if (firstInvalid) (form.elements.namedItem(firstInvalid) as HTMLElement | null)?.focus();
+    failed(formError);
   } catch {
-    setStatus(form, 'error', [
-      document.createTextNode('Sorry, your request didn’t go through. Please try again, or email us at '),
-      emailLink(email, buildMailto(email, fields)),
-      document.createTextNode('.'),
-    ]);
+    failed(SEND_FAILED_MESSAGE);
   } finally {
     if (button) {
       button.disabled = false;

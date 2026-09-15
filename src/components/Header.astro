@@ -6,7 +6,7 @@ interface Props {
   ctaHref?: string;
 }
 
-const { ctaLabel = 'Request a rescue', ctaHref = '/#request' } = Astro.props;
+const { ctaLabel = 'Request a free site review', ctaHref = '/#request' } = Astro.props;
 const onHome = Astro.url.pathname === '/';
 const home = onHome ? '' : '/';
 
@@ -14,7 +14,7 @@ const links = [
   { href: `${home}#fixes`, label: 'What we fix', wide: true },
   { href: `${home}#included`, label: 'Price', wide: true },
   { href: `${home}#how-it-works`, label: 'How it works', wide: false },
-  { href: '/services/', label: 'Services', wide: false },
+  { href: `${home}#faq`, label: 'FAQ', wide: false },
 ];
 ---
 

@@ -66,6 +66,47 @@ export function validateRequest(fields: RequestFields): { ok: boolean; errors: F
   return { ok: Object.keys(errors).length === 0, errors };
 }
 
+const FIELD_MESSAGES: FieldErrors = {
+  name: 'Please tell us your name.',
+  email: 'Please enter an email address we can reply to.',
+  website: 'Please check your website address.',
+  message: 'Please check your message.',
+};
+
+const FORMSPREE_FIELD_ALIASES: Record<string, keyof FieldErrors> = {
+  name: 'name',
+  email: 'email',
+  _replyto: 'email',
+  website: 'website',
+  message: 'message',
+};
+
+export const SEND_FAILED_MESSAGE = 'Sorry, your request didn’t go through. Please try again, or email us at';
+
+/**
+ * Formspree rejects submissions with a JSON body like
+ * { errors: [{ field?: 'email', code, message }] }. Field problems are shown
+ * beside the matching input in our own words; anything else becomes one message.
+ */
+export function errorsFromFormspree(body: unknown): { fieldErrors: FieldErrors; formError: string | null } {
+  const fieldErrors: FieldErrors = {};
+  let unmatched = false;
+
+  const errors = (body as { errors?: unknown } | null)?.errors;
+  if (Array.isArray(errors) && errors.length > 0) {
+    for (const error of errors) {
+      const field = FORMSPREE_FIELD_ALIASES[(error as { field?: string })?.field ?? ''];
+      if (field) fieldErrors[field] = FIELD_MESSAGES[field];
+      else unmatched = true;
+    }
+  } else {
+    unmatched = true;
+  }
+
+  const hasFieldErrors = Object.keys(fieldErrors).length > 0;
+  return { fieldErrors, formError: hasFieldErrors && !unmatched ? null : SEND_FAILED_MESSAGE };
+}
+
 export function isSpam(fields: RequestFields): boolean {
   return fields.company.trim() !== '';
 }

@@ -7,9 +7,8 @@ export const site = {
   locality: 'Locally owned in Lane County, Oregon, with service throughout the surrounding region.',
   replyTime: 'within one business day',
   /**
-   * Where the request form sends messages (a Formspree form URL, e.g.
-   * https://formspree.io/f/abcdwxyz). Set PUBLIC_FORM_ENDPOINT when deploying.
-   * Until it is set, the form opens the visitor's email app instead.
+   * Formspree form that delivers requests to the support inbox. Set
+   * PUBLIC_FORM_ENDPOINT to point at a different form (e.g. for testing).
    */
-  formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT ?? '',
+  formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT || 'https://formspree.io/f/xppzvnyv',
 } as const;

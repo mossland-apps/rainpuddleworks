@@ -19,8 +19,8 @@ Prices live in `src/lib/pricing.ts`; page copy lives in `src/content/` and `src/
 
 Browser tests drive the locally installed Google Chrome.
 
-## Before launch
+## Hosting and form
 
-1. Create a free Formspree form that delivers to support@rainpuddleworks.com.
-2. Set `PUBLIC_FORM_ENDPOINT` to its URL in the hosting dashboard (see `.env.example`).
-3. Deploy `dist/` to any static host and point rainpuddleworks.com at it.
+- Hosted on Cloudflare, deployed from the `main` branch.
+- The request form posts to Formspree (`https://formspree.io/f/xppzvnyv`), set in `src/config.ts`.
+  Set `PUBLIC_FORM_ENDPOINT` to send to a different Formspree form (see `.env.example`).

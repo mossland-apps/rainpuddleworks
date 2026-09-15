@@ -65,9 +65,7 @@ export const steps = [
 export const goodFitMaybes = [
   'Maybe the mobile version looks wrong.',
   'Maybe customers struggle to contact you.',
-  'Maybe links go nowhere.',
   'Maybe something broke months ago and nobody ever fixed it.',
-  'Maybe you simply know the site needs attention but don’t want to start over.',
 ];
 
 export const platforms = [
@@ -101,12 +99,6 @@ export const faqs = [
     ],
   },
   {
-    q: 'What if my website can’t really be rescued?',
-    a: [
-      'Then we’ll say so. If repairing it would cost more, take longer, or leave you with a fundamentally weak website, we won’t spend your money putting patches on something that should be retired.',
-    ],
-  },
-  {
     q: 'Will you change how my website looks?',
     a: [
       'Only where a repair calls for it, like fixing a layout that breaks on phones. Your design, platform, and content stay yours. Rescue repairs the site you have; it isn’t a redesign.',
@@ -115,8 +107,7 @@ export const faqs = [
   {
     q: 'What do you need from me to do the work?',
     a: [
-      'Access to make changes, usually a login on your website platform. WordPress, Squarespace, Wix, and Shopify all let you add a separate account for us, so you don’t have to share your own password. We’ll tell you exactly what’s needed.',
-      `The ${rescue.typicalBusinessDays}-business-day turnaround starts once that access is in place.`,
+      `Access to make changes, usually a login on your website platform. WordPress, Squarespace, Wix, and Shopify all let you add a separate account for us, so you don’t have to share your own password. We’ll tell you exactly what’s needed, and the ${rescue.typicalBusinessDays}-business-day turnaround starts once that access is in place.`,
     ],
   },
   {

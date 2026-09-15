@@ -46,7 +46,7 @@ const structuredData = {
   title="Rainpuddle Website Rescue | $349 Fixed-Price Website Repair in Oregon"
   description="Your website probably doesn't need a rebuild. Rainpuddle Website Rescue fixes broken buttons, mobile layouts, slow images, dead links, and contact forms on small-business websites for $349 flat."
   path="/"
-  ctaLabel="Request a rescue"
+  ctaLabel="Request a free site review"
   ctaHref="#request"
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
@@ -68,13 +68,27 @@ const structuredData = {
         </p>
       </div>
       <div class="panel promise__offer">
-        <p class="promise__label">Website Rescue</p>
         <p class="price"><strong>{price}</strong>{' '}<span>flat</span></p>
-        <p class="promise__desc">
-          A fixed-price repair service for small-business websites based in Oregon.
+        <p class="promise__desc">Fixed-price website repair for small businesses in Oregon.</p>
+        <p class="promise__turnaround">
+          Most projects are done within {rescue.typicalBusinessDays} business days of getting access.
         </p>
-        <a class="button button--primary promise__button" href="#request">Request a Website Rescue</a>
+        <a class="button button--primary promise__button" href="#request">Request a free site review</a>
         <p class="reassure">Free site review. You approve the repair scope before paying anything.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section about" aria-labelledby="about-title">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Who you’ll work with</span>
+        <h2 id="about-title">A small repair shop for small-business websites.</h2>
+      </div>
+      <div class="about__body">
+        <p class="about__owner">Owned and operated by Brandon McPherson</p>
+        <p class="about__company">{site.company} · Lane County, Oregon</p>
+        <p class="about__promise">You’ll work directly with the person reviewing and repairing your website.</p>
       </div>
     </div>
   </section>
@@ -161,7 +175,7 @@ const structuredData = {
     <div class="container split split--even">
       <div>
         <span class="eyebrow">Is your website a good candidate?</span>
-        <h2 id="fit-title">Website Rescue may be a good fit if…</h2>
+        <h2 id="fit-title">Website Rescue is a good fit when…</h2>
         <p class="lede fit__lede">
           Your website basically works—but parts of it are broken, outdated, frustrating, slow, or difficult to use.
         </p>
@@ -195,8 +209,7 @@ const structuredData = {
         <span class="eyebrow">What Website Rescue is not</span>
         <h2 id="not-title">A repair, not a redesign.</h2>
         <p class="not__intro">
-          Website Rescue is designed to repair an existing small-business website—not turn a five-page repair into
-          a six-week redesign project.
+          Website Rescue repairs an existing website. It won’t turn a five-page repair into a six-week redesign.
         </p>
       </div>
       <div>
@@ -204,7 +217,6 @@ const structuredData = {
         <ul class="cross-list">
           {notIncluded.map((item) => <li>{item}</li>)}
         </ul>
-        <p class="not__larger">If your website needs something larger, we’ll tell you before you pay for Website Rescue.</p>
       </div>
     </div>
     <div class="container">
@@ -212,26 +224,6 @@ const structuredData = {
         If we determine that repairing your existing site would cost more, take longer, or leave you with a
         fundamentally weak website, we’ll tell you. Website Rescue is never used to push an unnecessary rebuild.
       </p>
-    </div>
-  </section>
-
-  <section id="about" class="section" aria-labelledby="about-title">
-    <div class="container about">
-      <span class="eyebrow">Who we are</span>
-      <h2 id="about-title">A small repair shop for small-business websites.</h2>
-      <div class="about__body">
-        <p>
-          Rainpuddle is locally owned in Lane County, Oregon, with service throughout the surrounding region.
-        </p>
-        <p>
-          We don’t believe every dated website needs to be replaced. If the site you already have can be repaired
-          economically, we’ll recommend repair.
-        </p>
-        <p>
-          We do build new websites when a site truly can’t be saved, so when we tell you yours doesn’t need
-          rebuilding, we mean it. <a href="/services/">See all Rainpuddle services</a>
-        </p>
-      </div>
     </div>
   </section>
 
@@ -260,8 +252,8 @@ const structuredData = {
           <li>Just a clearer, cleaner, better-working website.</li>
         </ul>
         <p class="request__steps">
-          Send us your website and what’s been bothering you. The review is free, and
-          we’ll reply {site.replyTime} with next steps. Nothing is due until you approve the repair scope.
+          Send us your website and what’s been bothering you, and
+          we’ll reply {site.replyTime} with next steps.
         </p>
         <p class="request__email">
           Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a>
@@ -298,15 +290,15 @@ const structuredData = {
     color: var(--muted);
   }
 
-  .promise__label {
-    color: var(--ink);
-    font-weight: 750;
-    margin-bottom: 0.5rem;
+  .promise__desc {
+    margin-top: 0.6rem;
+    color: var(--muted);
   }
 
-  .promise__desc {
-    margin-top: 0.75rem;
-    color: var(--muted);
+  .promise__desc + .promise__turnaround {
+    margin-top: 0.35rem;
+    color: var(--ink);
+    font-weight: 600;
   }
 
   .promise__button {
@@ -493,24 +485,39 @@ const structuredData = {
     margin-bottom: 1rem;
   }
 
-  .not__larger {
-    margin-top: 1.5rem;
-    color: var(--ink);
-    font-weight: 600;
-  }
-
   .not__honest {
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
     max-width: 50rem;
   }
 
   .about {
-    max-width: calc(48rem + 2 * var(--gutter));
+    padding-block: clamp(3rem, 6vw, 4.5rem);
   }
 
   .about__body {
-    margin-top: 1.5rem;
     font-size: 1.125rem;
+  }
+
+  @media (min-width: 56rem) {
+    .about__body {
+      padding-top: 2rem;
+    }
+  }
+
+  .about__owner {
+    color: var(--ink);
+    font-size: 1.3rem;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+  }
+
+  .about__body .about__company {
+    margin-top: 0.2rem;
+    color: var(--muted);
+  }
+
+  .about__promise {
+    color: var(--text);
   }
 
   .request {

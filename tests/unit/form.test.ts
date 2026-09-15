@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildMailto,
   buildPayload,
+  errorsFromFormspree,
   isSpam,
   normalizeWebsite,
   validateRequest,
@@ -131,5 +132,38 @@ describe('buildMailto', () => {
     const href = buildMailto('support@rainpuddleworks.com', valid);
     expect(href).not.toContain('+');
     expect(href).toContain('%20');
+  });
+});
+
+describe('errorsFromFormspree', () => {
+  it('maps field problems reported by Formspree onto our form fields', () => {
+    const result = errorsFromFormspree({
+      errors: [
+        { field: 'email', code: 'TYPE_EMAIL', message: 'should be an email' },
+        { field: '_replyto', code: 'TYPE_EMAIL', message: 'should be an email' },
+      ],
+    });
+    expect(result.fieldErrors.email).toBe('Please enter an email address we can reply to.');
+    expect(result.formError).toBeNull();
+  });
+
+  it('turns form-wide problems into one plain message', () => {
+    const result = errorsFromFormspree({ errors: [{ code: 'FORM_NOT_FOUND', message: 'Form not found' }] });
+    expect(result.fieldErrors).toEqual({});
+    expect(result.formError).toMatch(/didn.t go through/i);
+  });
+
+  it('copes with an empty or unexpected response', () => {
+    for (const body of [null, undefined, 'oops', {}, { errors: 'nope' }]) {
+      const result = errorsFromFormspree(body);
+      expect(result.fieldErrors).toEqual({});
+      expect(result.formError).toMatch(/didn.t go through/i);
+    }
+  });
+
+  it('ignores fields the visitor cannot see', () => {
+    const result = errorsFromFormspree({ errors: [{ field: '_subject', message: 'too long' }] });
+    expect(result.fieldErrors).toEqual({});
+    expect(result.formError).toMatch(/didn.t go through/i);
   });
 });
