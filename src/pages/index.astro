@@ -1,0 +1,543 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import RequestForm from '../components/RequestForm.astro';
+import Faq from '../components/Faq.astro';
+import { site } from '../config';
+import { formatUSD, rescue } from '../lib/pricing';
+import {
+  faqs,
+  goodFitMaybes,
+  included,
+  noStrings,
+  notIncluded,
+  platforms,
+  problemFixes,
+  steps,
+} from '../content/rescue';
+
+const price = formatUSD(rescue.total);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.brand,
+  legalName: site.company,
+  slogan: site.tagline,
+  url: `${site.url}/`,
+  email: site.email,
+  image: `${site.url}/og-image.png`,
+  description:
+    'Fixed-price repair service for existing small-business websites. Broken buttons, mobile layouts, slow images, dead links, and contact forms fixed for $349 flat.',
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: 'Lane County, Oregon' },
+    { '@type': 'State', name: 'Oregon' },
+  ],
+  makesOffer: {
+    '@type': 'Offer',
+    name: 'Website Rescue',
+    price: rescue.total,
+    priceCurrency: 'USD',
+  },
+};
+---
+
+<BaseLayout
+  title="Rainpuddle Website Rescue | $349 Fixed-Price Website Repair in Oregon"
+  description="Your website probably doesn't need a rebuild. Rainpuddle Website Rescue fixes broken buttons, mobile layouts, slow images, dead links, and contact forms on small-business websites for $349 flat."
+  path="/"
+  ctaLabel="Request a rescue"
+  ctaHref="#request"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <Hero />
+
+  <section class="promise section" aria-labelledby="promise-title">
+    <div class="container split split--wide-left">
+      <div>
+        <h2 id="promise-title">Your website probably doesn’t need a rebuild.</h2>
+        <p class="promise__sub">It may just need to be rescued.</p>
+        <p class="lede">
+          Broken buttons. Awkward mobile layouts. Slow images. Dead links. Contact forms that don’t work. Pages that
+          haven’t been touched in years.
+        </p>
+        <p>
+          Small website problems add up. But fixing them shouldn’t require throwing away your entire website and
+          paying thousands of dollars to start over.
+        </p>
+      </div>
+      <div class="panel promise__offer">
+        <p class="promise__label">Website Rescue</p>
+        <p class="price"><strong>{price}</strong>{' '}<span>flat</span></p>
+        <p class="promise__desc">
+          A fixed-price repair service for small-business websites based in Oregon.
+        </p>
+        <a class="button button--primary promise__button" href="#request">Request a Website Rescue</a>
+        <p class="reassure">Free site review. You approve the repair scope before paying anything.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="fixes" class="section section--mist" aria-labelledby="fixes-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">What we fix</span>
+        <h2 id="fixes-title">The problems that quietly cost you customers.</h2>
+        <p>
+          We identify the most important problems on your existing website, agree on what needs to be fixed, and
+          repair them.
+        </p>
+      </div>
+      <table class="fix-table">
+        <thead>
+          <tr>
+            <th scope="col">Problem</th>
+            <th scope="col">Typical fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            problemFixes.map((row) => (
+              <tr>
+                <th scope="row">{row.problem}</th>
+                <td>{row.fix}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="included" class="section" aria-labelledby="included-title">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">What’s included</span>
+        <h2 id="included-title">One flat price. A clear list of what you get.</h2>
+        <div class="panel included__price">
+          <p class="price"><strong>{price}</strong>{' '}<span>flat</span></p>
+          <ul class="dash-list">
+            {noStrings.map((line) => <li>{line}</li>)}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <p class="included__intro">For {price}, Website Rescue includes:</p>
+        <ul class="check-list included-list">
+          {included.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="section section--warm" aria-labelledby="how-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2 id="how-title">Five steps, with no surprises in between.</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((step, index) => (
+            <li>
+              <span class="steps__number" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div>
+                <h3>{step.title}</h3>
+                {step.body.map((line) => (
+                  <p>{line}</p>
+                ))}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="good-fit" class="section" aria-labelledby="fit-title">
+    <div class="container split split--even">
+      <div>
+        <span class="eyebrow">Is your website a good candidate?</span>
+        <h2 id="fit-title">Website Rescue may be a good fit if…</h2>
+        <p class="lede fit__lede">
+          Your website basically works—but parts of it are broken, outdated, frustrating, slow, or difficult to use.
+        </p>
+        <ul class="fit__maybes">
+          {goodFitMaybes.map((line) => <li>{line}</li>)}
+        </ul>
+        <p class="fit__closer">That’s exactly what Website Rescue is for.</p>
+      </div>
+      <div class="panel">
+        <h3>Websites we work on</h3>
+        <ul class="check-list fit__platforms">
+          {
+            platforms.map((p) => (
+              <li>
+                {p.name}
+                {p.note && <span class="fit__note"> ({p.note})</span>}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="fit__unsure">
+          Not sure what your site is built with? That’s fine. Send us the address and we’ll find out.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="not-included" class="section section--mist" aria-labelledby="not-title">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">What Website Rescue is not</span>
+        <h2 id="not-title">A repair, not a redesign.</h2>
+        <p class="not__intro">
+          Website Rescue is designed to repair an existing small-business website—not turn a five-page repair into
+          a six-week redesign project.
+        </p>
+      </div>
+      <div>
+        <p class="not__label">It does not include:</p>
+        <ul class="cross-list">
+          {notIncluded.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="not__larger">If your website needs something larger, we’ll tell you before you pay for Website Rescue.</p>
+      </div>
+    </div>
+    <div class="container">
+      <p class="honest-note not__honest">
+        If we determine that repairing your existing site would cost more, take longer, or leave you with a
+        fundamentally weak website, we’ll tell you. Website Rescue is never used to push an unnecessary rebuild.
+      </p>
+    </div>
+  </section>
+
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="container about">
+      <span class="eyebrow">Who we are</span>
+      <h2 id="about-title">A small repair shop for small-business websites.</h2>
+      <div class="about__body">
+        <p>
+          Rainpuddle is locally owned in Lane County, Oregon, with service throughout the surrounding region.
+        </p>
+        <p>
+          We don’t believe every dated website needs to be replaced. If the site you already have can be repaired
+          economically, we’ll recommend repair.
+        </p>
+        <p>
+          We do build new websites when a site truly can’t be saved, so when we tell you yours doesn’t need
+          rebuilding, we mean it. <a href="/services/">See all Rainpuddle services</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section section--warm" aria-labelledby="faq-title">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Questions</span>
+        <h2 id="faq-title">Good questions to ask before you hand over your website.</h2>
+      </div>
+      <Faq items={faqs} />
+    </div>
+  </section>
+
+  <section id="request" class="section request" aria-labelledby="request-title">
+    <div class="container split split--even">
+      <div class="request__offer">
+        <span class="eyebrow">Request a Website Rescue</span>
+        <h2 id="request-title">Fix the Website You Already Have.</h2>
+        <p class="price request__price"><strong>{price}</strong>{' '}<span>flat</span></p>
+        <p class="request__split">
+          {formatUSD(rescue.deposit)} to start. {formatUSD(rescue.balance)} at completion.
+        </p>
+        <ul class="dash-list request__nos">
+          <li>No retainer.</li>
+          <li>No unnecessary rebuild.</li>
+          <li>Just a clearer, cleaner, better-working website.</li>
+        </ul>
+        <p class="request__steps">
+          Send us your website and what’s been bothering you. The review is free, and
+          we’ll reply {site.replyTime} with next steps. Nothing is due until you approve the repair scope.
+        </p>
+        <p class="request__email">
+          Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+      </div>
+      <div class="panel">
+        <RequestForm service="rescue" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .promise {
+    padding-block: clamp(2rem, 3.5vw, 3rem) var(--section-space);
+    border-top: 1px solid var(--line);
+  }
+
+  .promise h2 {
+    font-size: clamp(1.95rem, 3.3vw, 2.8rem);
+  }
+
+  .promise__sub {
+    margin-top: 0.3rem;
+    color: var(--teal);
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    margin-bottom: 1.25rem;
+  }
+
+  .promise .lede + p {
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+
+  .promise__label {
+    color: var(--ink);
+    font-weight: 750;
+    margin-bottom: 0.5rem;
+  }
+
+  .promise__desc {
+    margin-top: 0.75rem;
+    color: var(--muted);
+  }
+
+  .promise__button {
+    width: 100%;
+    margin-top: 1.25rem;
+  }
+
+  .fix-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .fix-table th,
+  .fix-table td {
+    text-align: left;
+    padding: 1.15rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  .fix-table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .fix-table thead th {
+    background: var(--ink);
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .fix-table tbody th {
+    width: 42%;
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  @media (max-width: 40rem) {
+    .fix-table thead {
+      display: none;
+    }
+
+    .fix-table tr,
+    .fix-table th,
+    .fix-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .fix-table tbody th {
+      width: 100%;
+      padding-bottom: 0.2rem;
+      border-bottom: 0;
+    }
+
+    .fix-table td {
+      padding-top: 0;
+      color: var(--muted);
+    }
+  }
+
+  .included__price {
+    margin-top: 2rem;
+  }
+
+  .included__price .dash-list {
+    margin-top: 1.25rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .included__intro {
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+
+  .steps {
+    list-style: none;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .steps > li {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding-block: 1.6rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  @media (min-width: 56rem) {
+    .steps > li > div {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 0.5rem 3rem;
+    }
+
+    .steps > li > div > p {
+      grid-column: 2;
+      margin-top: 0;
+    }
+
+    .steps > li > div > h3 {
+      grid-row: span 3;
+    }
+  }
+
+  .steps h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .steps p {
+    color: var(--text);
+  }
+
+  .steps p + p {
+    margin-top: 0.4rem;
+  }
+
+  .steps__number {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 2px solid var(--teal);
+    border-radius: 50%;
+    color: var(--teal);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+
+  .fit__lede {
+    margin-top: 1.25rem;
+  }
+
+  .fit__maybes {
+    list-style: none;
+    margin-top: 1.25rem;
+    display: grid;
+    gap: 0.35rem;
+    color: var(--muted);
+  }
+
+  .fit__closer {
+    margin-top: 1.25rem;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  .fit__platforms {
+    margin-top: 1.25rem;
+  }
+
+  .fit__note {
+    color: var(--muted);
+  }
+
+  .fit__unsure {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .not__intro {
+    margin-top: 1.25rem;
+    color: var(--text);
+  }
+
+  .not__label {
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .not__larger {
+    margin-top: 1.5rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .not__honest {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    max-width: 50rem;
+  }
+
+  .about {
+    max-width: calc(48rem + 2 * var(--gutter));
+  }
+
+  .about__body {
+    margin-top: 1.5rem;
+    font-size: 1.125rem;
+  }
+
+  .request {
+    border-top: 1px solid var(--line);
+  }
+
+  .request__price {
+    margin-top: 1.5rem;
+  }
+
+  .request__split {
+    margin-top: 0.5rem;
+    color: var(--ink);
+    font-weight: 650;
+  }
+
+  .request__nos {
+    margin-top: 1.25rem;
+  }
+
+  .request__steps {
+    margin-top: 1.5rem;
+    color: var(--muted);
+  }
+
+  .request__email {
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+</style>

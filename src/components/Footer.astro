@@ -1,0 +1,87 @@
+---
+import { site } from '../config';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <p class="site-footer__name">{site.company}</p>
+      <p>Website Rescue</p>
+      <p class="site-footer__tagline">{site.tagline}</p>
+    </div>
+    <div>
+      <p>{site.locality}</p>
+      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </div>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href="/">Website Rescue</a></li>
+        <li><a href="/services/">Services</a></li>
+        <li><a href="/website-rebuild/">Website Rebuild</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container">
+    <p class="site-footer__legal">© {year} {site.company}. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: #d8e6e8;
+    padding-block: 3.5rem 2rem;
+    font-size: 0.95rem;
+  }
+
+  .site-footer a {
+    color: var(--white);
+  }
+
+  .site-footer a:hover {
+    color: var(--ripple);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+    }
+  }
+
+  .site-footer p + p {
+    margin-top: 0.35rem;
+  }
+
+  .site-footer__name {
+    color: var(--white);
+    font-weight: 750;
+    font-size: 1.05rem;
+  }
+
+  .site-footer__tagline {
+    color: var(--ripple);
+  }
+
+  .site-footer ul {
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .site-footer__legal {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+    font-size: 0.85rem;
+    color: #a9c0c4;
+  }
+</style>

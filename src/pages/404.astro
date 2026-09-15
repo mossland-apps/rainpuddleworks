@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found | Rainpuddle Website Rescue"
+  description="The page you were looking for isn't here. Head back to Rainpuddle Website Rescue or see all services."
+  path="/404/"
+  noindex
+>
+  <section class="section">
+    <div class="container prose">
+      <span class="eyebrow">Page not found</span>
+      <h1>This link goes nowhere.</h1>
+      <p class="lede">
+        We know. For a website repair shop, that’s a little embarrassing. The page may have moved, or the address
+        may have a typo.
+      </p>
+      <p class="not-found__links">
+        <a class="button button--quiet" href="/">Go to Website Rescue</a>
+        <a class="button button--quiet" href="/services/">See all services</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+  }
+
+  .not-found__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+</style>

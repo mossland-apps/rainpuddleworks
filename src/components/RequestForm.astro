@@ -1,0 +1,191 @@
+---
+import { site } from '../config';
+import { services, type ServiceKey } from '../lib/form';
+
+interface Props {
+  /** Fixes the service for this page. Omit to let the visitor choose. */
+  service?: ServiceKey;
+  submitLabel?: string;
+}
+
+const { service, submitLabel = 'Send for a free review' } = Astro.props;
+const choices: ServiceKey[] = ['unsure', 'rescue', 'rebuild', 'custom'];
+const action = site.formEndpoint || `mailto:${site.email}`;
+---
+
+<form
+  class="request-form"
+  action={action}
+  method="post"
+  enctype={site.formEndpoint ? undefined : 'text/plain'}
+  data-endpoint={site.formEndpoint}
+  data-email={site.email}
+  novalidate
+>
+  {service && <input type="hidden" name="service" value={service} />}
+
+  {
+    !service && (
+      <div class="field">
+        <label for="rf-service">What do you need?</label>
+        <select id="rf-service" name="service">
+          {choices.map((key) => (
+            <option value={key}>{services[key]}</option>
+          ))}
+        </select>
+      </div>
+    )
+  }
+
+  <div class="field">
+    <label for="rf-name">Your name</label>
+    <input id="rf-name" name="name" type="text" autocomplete="name" required aria-describedby="rf-name-error" />
+    <p class="field__error" id="rf-name-error" hidden></p>
+  </div>
+
+  <div class="field">
+    <label for="rf-email">Email</label>
+    <input id="rf-email" name="email" type="email" autocomplete="email" required aria-describedby="rf-email-error" />
+    <p class="field__error" id="rf-email-error" hidden></p>
+  </div>
+
+  <div class="field">
+    <label for="rf-website">Website address</label>
+    <input
+      id="rf-website"
+      name="website"
+      type="text"
+      inputmode="url"
+      autocomplete="url"
+      placeholder="yourbusiness.com"
+      required
+      aria-describedby="rf-website-error"
+    />
+    <p class="field__error" id="rf-website-error" hidden></p>
+  </div>
+
+  <div class="field">
+    <label for="rf-message">What’s been bothering you? <span class="field__optional">(optional)</span></label>
+    <textarea id="rf-message" name="message" rows="5" aria-describedby="rf-message-error"></textarea>
+    <p class="field__error" id="rf-message-error" hidden></p>
+  </div>
+
+  <div class="field field--trap" aria-hidden="true">
+    <label for="rf-company">Company (leave blank)</label>
+    <input id="rf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <button class="button button--primary request-form__submit" type="submit">{submitLabel}</button>
+
+  <p class="request-form__status" role="status" aria-live="polite"></p>
+
+  <p class="request-form__note">
+    We’ll reply {site.replyTime}. We only use your details to answer your request. <a href="/privacy/">Privacy note</a>
+  </p>
+</form>
+
+<script>
+  import { initRequestForms } from '../scripts/request-form';
+  initRequestForms();
+</script>
+
+<style>
+  .request-form {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  label {
+    color: var(--ink);
+    font-weight: 650;
+    font-size: 0.95rem;
+  }
+
+  .field__optional {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.85rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--clay);
+    outline-offset: 1px;
+    border-color: var(--ink);
+  }
+
+  [aria-invalid='true'] {
+    border-color: var(--error);
+  }
+
+  .field__error {
+    color: var(--error);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .field--trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .request-form__submit {
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+
+  .request-form__submit[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .request-form__status:empty {
+    display: none;
+  }
+
+  .request-form__status {
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    background: var(--mist);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .request-form__status[data-tone='error'] {
+    background: #fbeae6;
+    color: var(--error);
+  }
+
+  .request-form__note {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

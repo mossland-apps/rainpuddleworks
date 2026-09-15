@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import heroArt from '../assets/rainpuddle-hero.png';
+import { site } from '../config';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <Image
+    class="hero__art"
+    src={heroArt}
+    alt=""
+    widths={[640, 960, 1280, 1600, heroArt.width]}
+    sizes="100vw"
+    format="webp"
+    quality={85}
+    loading="eager"
+    fetchpriority="high"
+  />
+
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <h1 id="hero-title">
+        <span>Rainpuddle</span>{' '}<span>Website Rescue</span>
+      </h1>
+      <p class="hero__tagline">{site.tagline}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  /* Desktop: the artwork fills the banner, anchored right so the raindrop stays clear of the title. */
+  .hero__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: 100% 58%;
+  }
+
+  .hero__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: clamp(18rem, 25vw, 30rem);
+    padding-block: 2.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 5.2vw, 4.75rem);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .hero h1 span {
+    display: block;
+  }
+
+  .hero__tagline {
+    margin-top: 0.7rem;
+    color: var(--teal);
+    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    font-weight: 620;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+
+  /* Tablets and phones: title first, then the raindrop side of the artwork beneath it. */
+  @media (max-width: 52rem) {
+    .hero {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero__inner {
+      order: 1;
+      min-height: 0;
+      padding-block: 2.25rem 0.5rem;
+    }
+
+    .hero__art {
+      order: 2;
+      position: static;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      max-height: 19rem;
+      object-position: 100% 60%;
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%);
+      mask-image: linear-gradient(to bottom, transparent, #000 14%);
+    }
+  }
+</style>

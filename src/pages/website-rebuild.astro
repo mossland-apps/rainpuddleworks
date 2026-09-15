@@ -1,0 +1,192 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RequestForm from '../components/RequestForm.astro';
+import { site } from '../config';
+import { formatUSD, rebuild, rescue } from '../lib/pricing';
+import { rebuildIncluded, rebuildNotIncluded } from '../content/rebuild';
+---
+
+<BaseLayout
+  title="Website Rebuild from $1,495 | Rainpuddle, Lane County, Oregon"
+  description="Rainpuddle Website Rebuild replaces an aging or structurally weak small-business website, from $1,495. Up to 5 pages, mobile-friendly design, your existing branding, and two revision rounds."
+  path="/website-rebuild/"
+  ctaLabel="Ask about a rebuild"
+  ctaHref="#request"
+>
+  <section class="section rebuild-intro">
+    <div class="container split split--wide-left">
+      <div>
+        <span class="eyebrow">Rainpuddle Website Rebuild</span>
+        <h1>Website Rebuild</h1>
+        <p class="rebuild-intro__tagline">Keep the business. Replace the website.</p>
+        <p class="lede">
+          For small service businesses that need a new website but don’t need a custom software project.
+        </p>
+        <p class="rebuild-intro__when">
+          A rebuild makes sense when your current site is structurally poor, obsolete, or difficult to maintain, or
+          when the cost of repairing it no longer makes sense.
+        </p>
+      </div>
+      <div class="panel">
+        <p class="price"><strong>From {formatUSD(rebuild.from)}</strong></p>
+        <p class="rebuild-intro__note">
+          A separate service from Website Rescue, with a different reason for existing.
+        </p>
+        <a class="button button--primary rebuild-intro__button" href="#request">Ask about a rebuild</a>
+        <p class="reassure">Tell us about your site. You’ll get a written scope before anything is due.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="repair-first-title">
+    <div class="container">
+      <p class="honest-note repair-first" id="repair-first-title">
+        If your site can be repaired economically, we’ll recommend Website Rescue instead.
+        <span>
+          It’s a {formatUSD(rescue.total)} fixed-price repair. <a href="/">See what Website Rescue fixes</a>
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="rebuild-included-title">
+    <div class="container split split--even">
+      <div id="rebuild-included">
+        <h2 id="rebuild-included-title">What’s included</h2>
+        <ul class="check-list">
+          {rebuildIncluded.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div>
+        <div id="rebuild-not-included">
+          <h2>Not included</h2>
+          <ul class="cross-list">
+            {rebuildNotIncluded.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div id="add-ons" class="panel add-ons">
+          <h3>Add-ons</h3>
+          <dl>
+            <div>
+              <dt>Additional standard page</dt>
+              <dd>{formatUSD(rebuild.addOns.extraPage)}</dd>
+            </div>
+            <div>
+              <dt>Basic copy rewrite</dt>
+              <dd>{formatUSD(rebuild.addOns.copyRewritePerPage)} per page</dd>
+            </div>
+            <div>
+              <dt>Blog migration</dt>
+              <dd>Quoted separately</dd>
+            </div>
+            <div>
+              <dt>Booking or integration work</dt>
+              <dd>Quoted separately</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="request" class="section section--warm" aria-labelledby="request-title">
+    <div class="container split split--even">
+      <div>
+        <span class="eyebrow">Ask about a rebuild</span>
+        <h2 id="request-title">Tell us about the website you want to replace.</h2>
+        <p class="request__copy">
+          Send us the address of your current site and what isn’t working for you. We’ll reply {site.replyTime}.
+          If a repair would do the job, we’ll tell you.
+        </p>
+        <p class="request__copy">
+          Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+      </div>
+      <div class="panel">
+        <RequestForm service="rebuild" submitLabel="Send my request" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rebuild-intro h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .rebuild-intro__tagline {
+    margin-top: 0.4rem;
+    margin-bottom: 1.5rem;
+    color: var(--teal);
+    font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+    font-weight: 650;
+    letter-spacing: -0.015em;
+  }
+
+  .rebuild-intro__when {
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+
+  .rebuild-intro__note {
+    margin-top: 0.75rem;
+    color: var(--muted);
+  }
+
+  .rebuild-intro__button {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .repair-first span {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  #rebuild-included h2,
+  #rebuild-not-included h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .add-ons {
+    margin-top: 2.5rem;
+  }
+
+  .add-ons dl {
+    margin: 1rem 0 0;
+  }
+
+  .add-ons dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .add-ons dl div:last-child {
+    border-bottom: 0;
+  }
+
+  .add-ons dt {
+    color: var(--text);
+  }
+
+  .add-ons dd {
+    margin: 0;
+    color: var(--ink);
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .request__copy {
+    margin-top: 1.25rem;
+    color: var(--muted);
+  }
+</style>

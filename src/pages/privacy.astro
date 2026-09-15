@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../config';
+---
+
+<BaseLayout
+  title="Privacy Note | Rainpuddle Website Rescue"
+  description="How Rainpuddle LLC handles the details you send through the Website Rescue request form: what we collect, why, and how to ask us to delete it."
+  path="/privacy/"
+>
+  <section class="section">
+    <div class="container prose">
+      <span class="eyebrow">Privacy note</span>
+      <h1>Your details are only used to answer you.</h1>
+
+      <h2>What we collect</h2>
+      <p>
+        When you send a request, we receive your name, email address, website address, the service you asked
+        about, and anything you choose to write in the message box.
+      </p>
+
+      <h2>How we use it</h2>
+      <p>
+        We use those details to review your website, reply to you, and, if you go ahead, to scope and carry out the
+        work. We do not sell or share your details for marketing, and we don’t add you to a mailing list.
+      </p>
+
+      <h2>How it reaches us</h2>
+      <p>
+        The request form is delivered to our inbox by a third-party form service, which processes your message only
+        to deliver it. This website does not use advertising trackers.
+      </p>
+
+      <h2>Access to your website</h2>
+      <p>
+        If you give us access to your website to carry out repairs, we use it only for the agreed work. You can
+        remove our access once the project is complete.
+      </p>
+
+      <h2>Questions or deletion</h2>
+      <p>
+        To ask what we hold about you, or to have it deleted, email <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+      <p class="prose__meta">{site.company}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 2rem;
+  }
+
+  .prose h2 {
+    font-size: 1.35rem;
+  }
+
+  .prose__meta {
+    margin-top: 2.5rem;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import { site } from '../config';
+
+interface Props {
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const { ctaLabel = 'Request a rescue', ctaHref = '/#request' } = Astro.props;
+const onHome = Astro.url.pathname === '/';
+const home = onHome ? '' : '/';
+
+const links = [
+  { href: `${home}#fixes`, label: 'What we fix', wide: true },
+  { href: `${home}#included`, label: 'Price', wide: true },
+  { href: `${home}#how-it-works`, label: 'How it works', wide: false },
+  { href: '/services/', label: 'Services', wide: false },
+];
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/">
+      <svg class="brand__mark" viewBox="0 0 24 28" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="2.6" r="2.2" fill="#3791a2"></circle>
+        <path d="M12 7.5c.3 6 1.2 9.6 6.4 11.6-3.6 1.2-9.2 1.2-12.8 0C10.8 17.1 11.7 13.5 12 7.5Z" fill="#3791a2"></path>
+        <ellipse cx="12" cy="22.6" rx="11" ry="3.2" fill="none" stroke="#94c0c8" stroke-width="1.8"></ellipse>
+      </svg>
+      <span>{site.brand}</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        {
+          links.map((link) => (
+            <li class:list={{ 'site-nav__wide': link.wide }}>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="button button--quiet button--small site-header__cta" href={ctaHref}>{ctaLabel}</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    min-height: 4.5rem;
+    flex-wrap: wrap;
+    padding-block: 0.6rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink);
+    font-weight: 780;
+    font-size: 1.08rem;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+  }
+
+  .brand__mark {
+    width: 1.35rem;
+    height: auto;
+    flex: none;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+
+  .site-nav ul a {
+    color: var(--text);
+    font-weight: 560;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .site-nav ul a:hover {
+    color: var(--teal-dark);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 62rem) {
+    .site-nav__wide {
+      display: none;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .site-header__inner {
+      gap: 0.35rem;
+    }
+
+    .site-nav {
+      width: 100%;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .site-nav ul {
+      gap: 1.1rem;
+    }
+
+    .site-header__cta {
+      display: none;
+    }
+  }
+</style>

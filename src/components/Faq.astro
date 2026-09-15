@@ -1,0 +1,75 @@
+---
+interface Props {
+  items: { q: string; a: string[] }[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item) => (
+      <details>
+        <summary>{item.q}</summary>
+        <div class="faq__answer">
+          {item.a.map((line) => (
+            <p>{line}</p>
+          ))}
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  details {
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  summary {
+    position: relative;
+    list-style: none;
+    cursor: pointer;
+    padding: 1.2rem 2.75rem 1.2rem 0;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.35;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before,
+  summary::after {
+    content: '';
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    width: 1rem;
+    height: 2px;
+    background: var(--teal);
+  }
+
+  summary::after {
+    transform: rotate(90deg);
+  }
+
+  details[open] summary::after {
+    display: none;
+  }
+
+  summary:hover {
+    color: var(--teal-dark);
+  }
+
+  .faq__answer {
+    padding: 0 2.75rem 1.4rem 0;
+    color: var(--text);
+  }
+</style>

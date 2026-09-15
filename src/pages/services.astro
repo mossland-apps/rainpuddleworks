@@ -1,0 +1,232 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RequestForm from '../components/RequestForm.astro';
+import { site } from '../config';
+import { formatUSD, rebuild, rescue } from '../lib/pricing';
+
+const offers = [
+  {
+    name: 'Website Rescue',
+    tagline: 'Fix what’s broken. Keep what works.',
+    price: formatUSD(rescue.total),
+    priceNote: 'flat',
+    purpose: 'Repair an existing site.',
+    when: `Your site is fundamentally usable and needs up to about ${rescue.maxFixes} contained fixes.`,
+    link: { href: '/', label: 'See what Website Rescue includes' },
+  },
+  {
+    name: 'Website Rebuild',
+    tagline: 'Keep the business. Replace the website.',
+    price: `From ${formatUSD(rebuild.from)}`,
+    priceNote: '',
+    purpose: 'Replace an aging or structurally weak site.',
+    when: 'Your current site is structurally poor, obsolete, or difficult to maintain, or repairing it no longer makes sense.',
+    link: { href: '/website-rebuild/', label: 'See what Website Rebuild includes' },
+  },
+  {
+    name: 'Custom Web Development',
+    tagline: 'For projects beyond standard websites.',
+    price: 'Custom quote',
+    priceNote: '',
+    purpose: 'New functionality or a larger build.',
+    when: 'You need booking systems, memberships, e-commerce, custom integrations, or a web application.',
+    link: { href: '#request', label: 'Ask for a quote' },
+  },
+];
+---
+
+<BaseLayout
+  title="Website Services | Rainpuddle, Lane County, Oregon"
+  description="Rainpuddle offers three separate website services for small businesses: Website Rescue ($349 repair), Website Rebuild (from $1,495), and custom web development by quote."
+  path="/services/"
+  ctaLabel="Ask about a project"
+  ctaHref="#request"
+>
+  <section class="section services-intro">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Website services</span>
+        <h1>Three different jobs. We’ll tell you which one you need.</h1>
+        <p class="lede">
+          Most small-business websites need repair, not replacement. When a site genuinely needs more, we say so
+          plainly and quote the right service.
+        </p>
+      </div>
+
+      <div class="services">
+        {
+          offers.map((offer) => (
+            <article class="service">
+              <h2>{offer.name}</h2>
+              <p class="service__tagline">{offer.tagline}</p>
+              <p class="service__price">
+                <strong>{offer.price}</strong>
+                {offer.priceNote && <span>{' '}{offer.priceNote}</span>}
+              </p>
+              <p class="service__purpose">{offer.purpose}</p>
+              <p class="service__when">
+                <span>Right when:</span>{' '}{offer.when}
+              </p>
+              <a class="service__link" href={offer.link.href}>
+                {offer.link.label}
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="philosophy-title">
+    <div class="container philosophy">
+      <span class="eyebrow">Our philosophy</span>
+      <h2 id="philosophy-title">Repair first, whenever repair makes sense.</h2>
+      <p class="lede">
+        We don’t believe every dated website needs to be replaced. If the site you already have can be repaired
+        economically, we’ll recommend repair.
+      </p>
+      <p>
+        And if your site genuinely needs replacing, we won’t spend {formatUSD(rescue.total)} putting patches on
+        something that should be retired. Website Rescue is never used to push an unnecessary rebuild.
+      </p>
+    </div>
+  </section>
+
+  <section id="request" class="section" aria-labelledby="request-title">
+    <div class="container split split--even">
+      <div>
+        <span class="eyebrow">Not sure which you need?</span>
+        <h2 id="request-title">Send us your website. We’ll recommend the smallest job that solves the problem.</h2>
+        <p class="request__copy">
+          Tell us what you’re trying to fix or build. We’ll reply {site.replyTime}, and nothing is due until you
+          approve a written scope.
+        </p>
+        <p class="request__copy">
+          Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+      </div>
+      <div class="panel">
+        <RequestForm submitLabel="Send my request" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .services-intro h1 {
+    font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .services-intro .lede {
+    margin-top: 1.25rem;
+    color: var(--text);
+  }
+
+  .services {
+    display: grid;
+    gap: 0;
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  @media (min-width: 60rem) {
+    .services {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(6, auto);
+      border-top: 0;
+    }
+
+    .service + .service {
+      border-left: 1px solid var(--line-strong);
+      padding-left: 2.25rem;
+    }
+
+    .services .service {
+      display: grid;
+      grid-row: span 6;
+      grid-template-rows: subgrid;
+      align-content: start;
+      padding-right: 2.25rem;
+      border-top: 3px solid var(--ink);
+    }
+
+    .services .service:first-child {
+      border-top-color: var(--teal);
+    }
+  }
+
+  .service {
+    display: flex;
+    flex-direction: column;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .service h2 {
+    font-size: 1.6rem;
+  }
+
+  .service__tagline {
+    margin-top: 0.35rem;
+    color: var(--teal);
+    font-weight: 650;
+  }
+
+  .service__price {
+    margin-top: 1.5rem;
+    color: var(--ink);
+  }
+
+  .service__price strong {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .service__price span {
+    font-weight: 650;
+  }
+
+  .service__purpose {
+    margin-top: 0.75rem;
+    color: var(--ink);
+    font-weight: 650;
+  }
+
+  .service__when {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    flex: 1;
+  }
+
+  .service__when span {
+    color: var(--text);
+    font-weight: 650;
+  }
+
+  .service__link {
+    justify-self: start;
+    align-self: end;
+    margin-top: 1.5rem;
+    font-weight: 700;
+  }
+
+  .philosophy {
+    max-width: calc(48rem + 2 * var(--gutter));
+  }
+
+  .philosophy h2 {
+    margin-bottom: 1.25rem;
+  }
+
+  .philosophy .lede + p {
+    margin-top: 1rem;
+  }
+
+  .request__copy {
+    margin-top: 1.25rem;
+    color: var(--muted);
+  }
+</style>
