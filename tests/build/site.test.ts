@@ -187,6 +187,11 @@ describe('homepage: Website Rescue', () => {
     expect(cta?.getAttribute('href')).toBe('#request');
   });
 
+  it('links to the About page from the main navigation', () => {
+    const link = home().querySelector('header nav a[href="/about/"]');
+    expect(link && text(link)).toBe('About');
+  });
+
   it('keeps other services out of the main navigation, and in the footer', () => {
     expect(home().querySelector('header nav a[href="/services/"]')).toBeNull();
     const footerLink = home().querySelector('footer a[href="/services/"]');
@@ -276,14 +281,15 @@ describe('homepage: Website Rescue', () => {
     expect(t).toContain("we'll tell you. Website Rescue is never used to push an unnecessary rebuild.");
   });
 
-  it('names the owner and promises direct contact, high on the page', () => {
+  it('introduces the business as locally owned, without a name or photo', () => {
     const about = home().querySelector('#about')!;
     const t = text(about);
     expect(t).toContain('A small repair shop for small-business websites.');
-    expect(t).toContain('Owned and operated by Brandon McPherson');
-    expect(t).toContain('Rainpuddle LLC · Lane County, Oregon');
+    expect(t).toContain('Rainpuddle LLC · Locally owned and operated in Lane County, Oregon');
     expect(t).toContain("You'll work directly with the person reviewing and repairing your website.");
+    expect(t).not.toContain('Brandon');
     expect(about.querySelector('img')).toBeNull();
+    expect(about.querySelector('a[href="/about/"]')).not.toBeNull();
     const ids = home().querySelectorAll('main section[id]').map((el) => el.getAttribute('id'));
     expect(ids.indexOf('about')).toBeLessThan(ids.indexOf('fixes'));
   });
@@ -427,5 +433,136 @@ describe('privacy page', () => {
 
   it('is linked from the request form', () => {
     expect(page('/').querySelector('#request a[href="/privacy/"]')).not.toBeNull();
+  });
+});
+
+describe('About page', () => {
+  const doc = () => page('/about/');
+  const main = () => doc().querySelector('main')!;
+  const headings = (level: string) => doc().querySelectorAll(`main ${level}`).map((h) => text(h));
+
+  it('opens with a plain statement of what Rainpuddle is', () => {
+    expect(text(doc().querySelector('h1')!)).toContain('Rainpuddle Website Rescue');
+    expect(text(main())).toContain(
+      'Rainpuddle Website Rescue is an independent repair service for small-business websites.',
+    );
+  });
+
+  it('runs through the sections in the order a reader expects', () => {
+    expect(headings('h2')).toEqual([
+      'What Rainpuddle Website Rescue does',
+      'What makes Rainpuddle Website Rescue different',
+      'Who we are',
+      'How Rainpuddle Website Rescue works',
+      'Key facts',
+      'Frequently asked questions',
+    ]);
+  });
+
+  it('describes each service under its own heading', () => {
+    const services = doc().querySelectorAll('#what-we-do > div');
+    expect(services.map((s) => text(s.querySelector('h3')!))).toEqual([
+      'Website Rescue',
+      'Website Rebuild',
+      'Custom Web Development',
+    ]);
+    for (const service of services) {
+      const paragraphs = service.querySelectorAll('p');
+      const sentences = text(paragraphs[paragraphs.length - 1]).split(/(?<=\.)\s/).length;
+      expect(sentences).toBeGreaterThanOrEqual(2);
+      expect(sentences).toBeLessThanOrEqual(4);
+    }
+    expect(text(doc().querySelector('#what-we-do')!)).toContain('$349');
+  });
+
+  it('lists five specific differences, each with a number in it', () => {
+    const points = doc().querySelectorAll('#different > div');
+    expect(points).toHaveLength(5);
+    for (const point of points) {
+      expect(text(point.querySelector('h3')!).length).toBeGreaterThan(10);
+      expect(text(point)).toMatch(/\$?\d/);
+    }
+  });
+
+  it('introduces the founder with a photo, role and background', () => {
+    const who = doc().querySelector('#who-we-are')!;
+    const t = text(who);
+    expect(t).toContain('Brandon McPherson');
+    expect(t).toContain('Founder, Web Repair Specialist');
+    expect(t).toContain('former teacher');
+    expect(t).toContain('over 10 years of web design and repair experience');
+    const photo = who.querySelector('img')!;
+    expect(photo, 'founder photo').not.toBeNull();
+    expect(photo.getAttribute('alt')).toBe('Brandon McPherson, founder of Rainpuddle Website Rescue');
+    expect(photo.getAttribute('src')).toMatch(/^\/_astro\/brandon-mcpherson\..+\.webp$/);
+    expect(photo.getAttribute('width')).toBeTruthy();
+    expect(photo.getAttribute('height')).toBeTruthy();
+  });
+
+  it('explains how working together actually goes', () => {
+    const t = text(doc().querySelector('#how-we-work')!);
+    expect(t).toContain('support@rainpuddleworks.com');
+    expect(t).toContain('within one business day');
+    expect(t).toContain('3 business days');
+    expect(t).toMatch(/separate (account|login)/i);
+    expect(t).toMatch(/written (repair )?scope/i);
+  });
+
+  it('publishes the key facts as a definition list a machine can read', () => {
+    const list = doc().querySelector('#key-facts dl')!;
+    expect(list).not.toBeNull();
+    const terms = list.querySelectorAll('dt').map((dt) => text(dt));
+    expect(terms).toEqual([
+      'Company name',
+      'Type',
+      'Founder',
+      'Headquarters',
+      'Website',
+      'Core offering',
+      'Pricing',
+      'Contract terms',
+      'Services',
+      'Communication',
+    ]);
+    const values = list.querySelectorAll('dd').map((dd) => text(dd));
+    expect(values).toHaveLength(terms.length);
+    expect(values.join(' | ')).toContain('Rainpuddle LLC');
+    expect(values.join(' | ')).toContain('Web Repair Service and Independent Software Studio');
+    expect(values.join(' | ')).toContain('Brandon McPherson');
+    expect(values.join(' | ')).toContain('Junction City, Lane County, Oregon');
+    expect(values.join(' | ')).toContain('https://rainpuddleworks.com/');
+    expect(values.join(' | ')).toContain('Website Rescue');
+    expect(values.join(' | ')).toContain('$349');
+    expect(values.join(' | ')).toMatch(/no retainer/i);
+    expect(values.join(' | ')).toContain('support@rainpuddleworks.com');
+  });
+
+  it('answers the same questions as the homepage, as readable headings', () => {
+    const items = doc().querySelectorAll('#faq-list > div');
+    expect(items.length).toBeGreaterThanOrEqual(5);
+    for (const item of items) {
+      expect(text(item.querySelector('h3')!)).toMatch(/\?$/);
+      const sentences = text(item.querySelector('p')!).split(/(?<=\.)\s/).length;
+      expect(sentences).toBeLessThanOrEqual(4);
+    }
+  });
+
+  it('tells search engines and assistants who the business is', () => {
+    const data = JSON.parse(doc().querySelector('script[type="application/ld+json"]')!.textContent);
+    expect(data['@type']).toBe('ProfessionalService');
+    expect(data.founder).toMatchObject({ '@type': 'Person', name: 'Brandon McPherson' });
+    expect(data.address).toMatchObject({
+      '@type': 'PostalAddress',
+      addressLocality: 'Junction City',
+      addressRegion: 'OR',
+    });
+    expect(data.url).toBe(`${SITE}/about/`);
+  });
+
+  it('ends by pointing back at the free review', () => {
+    const cta = doc().querySelector('main a.button--primary')!;
+    expect(cta).not.toBeNull();
+    expect(text(cta)).toBe('Request a free site review');
+    expect(cta.getAttribute('href')).toBe('/#request');
   });
 });

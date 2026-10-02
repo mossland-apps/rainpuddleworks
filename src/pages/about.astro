@@ -1,0 +1,427 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import founderPhoto from '../assets/brandon-mcpherson.webp';
+import { site } from '../config';
+import { formatUSD, rebuild, rescue } from '../lib/pricing';
+import { faqs } from '../content/rescue';
+
+const price = formatUSD(rescue.total);
+
+const services = [
+  {
+    name: 'Website Rescue',
+    price: `${price} flat`,
+    body: `We review up to ${rescue.maxPages} pages of your existing website and agree a written list of up to ${rescue.maxFixes} repairs before any work starts. Broken forms and buttons, mobile layouts, dead links, slow images, and neglected headings and metadata all get fixed in place. You keep the design, platform and content you already have, and the site simply works again.`,
+  },
+  {
+    name: 'Website Rebuild',
+    price: `from ${formatUSD(rebuild.from)}`,
+    body: 'When a site is too dated or fragile to repair economically, we replace it with a straightforward site of up to five pages that keeps your branding and your existing words. It includes mobile-friendly design, a working contact form, basic search and accessibility structure, and two revision rounds. Your old site is archived before the new one goes live.',
+  },
+  {
+    name: 'Custom Web Development',
+    price: 'quoted per project',
+    body: 'Booking systems, memberships, online stores and integrations sit outside a repair or a standard rebuild. We talk through what you actually need and quote the work separately. If a smaller job would solve the problem, we say so first.',
+  },
+];
+
+const differences = [
+  {
+    title: `One flat price of ${price}, never an hourly bill`,
+    body: `A Website Rescue costs ${price}, split ${formatUSD(rescue.deposit)} to start and ${formatUSD(rescue.balance)} on completion. There is no retainer, no monthly contract, and no surprise invoice for extra hours.`,
+  },
+  {
+    title: 'Nothing is due until you approve a written scope',
+    body: `The first review is free. We look at your site, write out exactly which repairs we will make, and only then is the ${formatUSD(rescue.deposit)} deposit due. If you decide not to go ahead, you owe nothing.`,
+  },
+  {
+    title: `Most repairs are finished within ${rescue.typicalBusinessDays} business days`,
+    body: `The ${rescue.typicalBusinessDays}-business-day clock starts once we have the access needed to make changes, not when you first email us. We reply to new requests ${site.replyTime}.`,
+  },
+  {
+    title: 'Repair is recommended over replacement whenever repair makes sense',
+    body: `We also build websites from scratch, starting at ${formatUSD(rebuild.from)}, so recommending a ${price} repair costs us the larger job. That is the point: if repairing your site is the economical answer, that is what we will tell you.`,
+  },
+  {
+    title: `One revision round and ${rescue.followUpDays} days of follow-up`,
+    body: `After the repairs you get a before-and-after summary and one revision round. For ${rescue.followUpDays} days after completion, anything directly related to a repair we made gets fixed at no charge.`,
+  },
+];
+
+const howWeWork = [
+  {
+    title: 'How to reach us',
+    body: `Everything runs by email at ${site.email}, so you always have a written record of what was agreed and what changed. No call is required at any point, though we are happy to talk if you prefer.`,
+  },
+  {
+    title: 'Response time',
+    body: `New requests get a reply ${site.replyTime}, Monday to Friday. During a project you hear from us when the scope is ready, when the repairs are done, and if anything unexpected turns up.`,
+  },
+  {
+    title: 'Getting started',
+    body: 'Send your website address and what has been bothering you. We review the site, send a written repair scope for you to approve, and invoice the first half once you agree to it.',
+  },
+  {
+    title: 'Access to your site',
+    body: 'Most platforms let you add a separate account for us instead of sharing your own password, and we tell you exactly what is needed. You can remove that access as soon as the project is complete.',
+  },
+  {
+    title: 'Turnaround and finishing up',
+    body: `Most projects are completed within ${rescue.typicalBusinessDays} business days of receiving access. You then get a summary of what changed, one revision round, and an invoice for the remaining ${formatUSD(rescue.balance)}.`,
+  },
+];
+
+const keyFacts = [
+  { term: 'Company name', value: site.company },
+  { term: 'Type', value: 'Web Repair Service and Independent Software Studio' },
+  { term: 'Founder', value: 'Brandon McPherson' },
+  { term: 'Headquarters', value: 'Junction City, Lane County, Oregon' },
+  { term: 'Website', value: 'https://rainpuddleworks.com/', link: 'https://rainpuddleworks.com/' },
+  { term: 'Core offering', value: `Website Rescue — ${price} fixed-price website repair` },
+  {
+    term: 'Pricing',
+    value: `Website Rescue ${price} flat (${formatUSD(rescue.deposit)} to start, ${formatUSD(rescue.balance)} at completion); Website Rebuild from ${formatUSD(rebuild.from)}; custom work quoted per project`,
+  },
+  {
+    term: 'Contract terms',
+    value: 'No retainer, no monthly contract, no hourly billing; written scope approved before any payment is due',
+  },
+  { term: 'Services', value: 'Website Rescue, Website Rebuild, Custom Web Development' },
+  { term: 'Communication', value: `Email ${site.email} — reply ${site.replyTime}`, link: `mailto:${site.email}` },
+];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.brand,
+  legalName: site.company,
+  slogan: site.tagline,
+  url: `${site.url}/about/`,
+  email: site.email,
+  image: `${site.url}/og-image.png`,
+  description: 'Rainpuddle Website Rescue is an independent repair service for small-business websites, based in Junction City, Lane County, Oregon.',
+  founder: {
+    '@type': 'Person',
+    name: 'Brandon McPherson',
+    jobTitle: 'Founder, Web Repair Specialist',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Junction City',
+    addressRegion: 'OR',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: 'Lane County, Oregon' },
+    { '@type': 'State', name: 'Oregon' },
+  ],
+  makesOffer: [
+    { '@type': 'Offer', name: 'Website Rescue', price: rescue.total, priceCurrency: 'USD' },
+    { '@type': 'Offer', name: 'Website Rebuild', price: rebuild.from, priceCurrency: 'USD' },
+  ],
+};
+---
+
+<BaseLayout
+  title="About Rainpuddle Website Rescue | Independent Website Repair in Oregon"
+  description="Rainpuddle Website Rescue is an independent repair service for small-business websites, founded by Brandon McPherson in Junction City, Lane County, Oregon. Fixed-price repairs from $349."
+  path="/about/"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <section class="section about-intro">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">About</span>
+        <h1>About Rainpuddle Website Rescue</h1>
+        <p class="lede">
+          Rainpuddle Website Rescue is an independent repair service for small-business websites.
+        </p>
+        <p>
+          We fix the problems that quietly cost you customers—broken contact forms, awkward mobile layouts, dead
+          links, slow pages—on the website you already have, for a fixed price, without a redesign.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="what-we-do-title">
+    <div class="container">
+      <h2 id="what-we-do-title">What Rainpuddle Website Rescue does</h2>
+      <div id="what-we-do" class="about-grid">
+        {
+          services.map((service) => (
+            <div>
+              <h3>{service.name}</h3>
+              <p class="about-grid__price">{service.price}</p>
+              <p>{service.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="different-title">
+    <div class="container">
+      <h2 id="different-title">What makes Rainpuddle Website Rescue different</h2>
+      <div id="different" class="about-points">
+        {
+          differences.map((point) => (
+            <div>
+              <h3>{point.title}</h3>
+              <p>{point.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm" aria-labelledby="who-title">
+    <div class="container">
+      <h2 id="who-title">Who we are</h2>
+      <div id="who-we-are" class="founder">
+        <Image
+          class="founder__photo"
+          src={founderPhoto}
+          alt="Brandon McPherson, founder of Rainpuddle Website Rescue"
+          widths={[320, 640]}
+          sizes="(min-width: 56rem) 320px, 60vw"
+          format="webp"
+          quality={85}
+        />
+        <div>
+          <p class="founder__name">Brandon McPherson</p>
+          <p class="founder__role">Founder, Web Repair Specialist</p>
+          <p>
+            Brandon is a small-business owner and former teacher with over 10 years of web design and repair
+            experience.
+          </p>
+          <p>
+            Rainpuddle Website Rescue started from a simple philosophy: not every dated website needs to be
+            replaced, and some just need a rescue. If the site you already have can be repaired economically
+            without a redesign, we’ll recommend repair.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="container">
+      <h2 id="how-title">How Rainpuddle Website Rescue works</h2>
+      <div id="how-we-work" class="about-points">
+        {
+          howWeWork.map((step) => (
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="key-facts-title">
+    <div class="container">
+      <h2 id="key-facts-title">Key facts</h2>
+      <div id="key-facts">
+        <dl class="facts">
+          {
+            keyFacts.map((fact) => (
+              <div>
+                <dt>{fact.term}</dt>
+                <dd>{fact.link ? <a href={fact.link}>{fact.value}</a> : fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container">
+      <h2 id="faq-title">Frequently asked questions</h2>
+      <div id="faq-list" class="about-points">
+        {
+          faqs.map((faq) => (
+            <div>
+              <h3>{faq.q}</h3>
+              {faq.a.map((line) => (
+                <p>{line}</p>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--warm about-cta" aria-label="Get started">
+    <div class="container">
+      <p class="lede about-cta__text">
+        Send us your website and what’s been bothering you. The review is free, and we’ll reply {site.replyTime}.
+      </p>
+      <a class="button button--primary" href="/#request">Request a free site review</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-intro h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .about-intro .lede {
+    margin-top: 1.25rem;
+    color: var(--ink);
+    font-weight: 620;
+  }
+
+  .about-intro .section-head p + p {
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+
+  .section h2 {
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+    max-width: 44rem;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 56rem) {
+    .about-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.5rem;
+    }
+  }
+
+  .about-grid > div {
+    border-top: 2px solid var(--ink);
+    padding-top: 1.25rem;
+  }
+
+  .about-grid h3 {
+    font-size: 1.35rem;
+  }
+
+  .about-grid__price {
+    margin-top: 0.3rem;
+    margin-bottom: 0.9rem;
+    color: var(--teal);
+    font-weight: 700;
+  }
+
+  .about-points {
+    display: grid;
+    gap: 1.75rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 56rem) {
+    .about-points {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2.25rem 3rem;
+    }
+  }
+
+  .about-points > div {
+    max-width: 36rem;
+  }
+
+  .about-points h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .about-points p {
+    color: var(--text);
+  }
+
+  .about-points p + p {
+    margin-top: 0.75rem;
+  }
+
+  .founder {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    max-width: 52rem;
+  }
+
+  @media (min-width: 56rem) {
+    .founder {
+      grid-template-columns: 18rem minmax(0, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  .founder__photo {
+    width: 100%;
+    max-width: 18rem;
+    height: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+  }
+
+  .founder__name {
+    color: var(--ink);
+    font-size: 1.4rem;
+    font-weight: 780;
+    letter-spacing: -0.015em;
+  }
+
+  .founder__role {
+    margin-top: 0.15rem;
+    margin-bottom: 1.1rem;
+    color: var(--teal);
+    font-weight: 650;
+  }
+
+  .facts {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+    max-width: 58rem;
+  }
+
+  .facts > div {
+    display: grid;
+    gap: 0.25rem 2rem;
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  @media (min-width: 40rem) {
+    .facts > div {
+      grid-template-columns: 12rem minmax(0, 1fr);
+    }
+  }
+
+  .facts dt {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .facts dd {
+    margin: 0;
+    color: var(--text);
+  }
+
+  .about-cta__text {
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+  }
+</style>

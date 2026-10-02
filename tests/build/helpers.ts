@@ -61,4 +61,4 @@ export function pathForFile(file: string): string {
   return `/${rel}`;
 }
 
-export const PUBLIC_PAGES = ['/', '/services/', '/website-rebuild/', '/privacy/'];
+export const PUBLIC_PAGES = ['/', '/about/', '/services/', '/website-rebuild/', '/privacy/'];
