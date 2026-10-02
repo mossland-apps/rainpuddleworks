@@ -5,6 +5,7 @@ Marketing site for rainpuddleworks.com, built with Astro as a static site.
 ## Pages
 
 - `/` Website Rescue ($349 fixed-price repair)
+- `/about/` About Rainpuddle: services, differences, founder, how it works, key facts, FAQ
 - `/services/` Rescue, Rebuild, and Custom Web Development
 - `/website-rebuild/` Website Rebuild (from $1,495)
 - `/privacy/` Privacy note

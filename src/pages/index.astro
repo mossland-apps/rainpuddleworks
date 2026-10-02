@@ -82,13 +82,13 @@ const structuredData = {
   <section id="about" class="section about" aria-labelledby="about-title">
     <div class="container split">
       <div>
-        <span class="eyebrow">Who you’ll work with</span>
+        <span class="eyebrow">Who we are</span>
         <h2 id="about-title">A small repair shop for small-business websites.</h2>
       </div>
       <div class="about__body">
-        <p class="about__owner">Owned and operated by Brandon McPherson</p>
-        <p class="about__company">{site.company} · Lane County, Oregon</p>
+        <p class="about__owner">{site.company} · Locally owned and operated in Lane County, Oregon</p>
         <p class="about__promise">You’ll work directly with the person reviewing and repairing your website.</p>
+        <p class="about__link"><a href="/about/">More about Rainpuddle</a></p>
       </div>
     </div>
   </section>
@@ -506,18 +506,19 @@ const structuredData = {
 
   .about__owner {
     color: var(--ink);
-    font-size: 1.3rem;
-    font-weight: 750;
+    font-size: 1.25rem;
+    font-weight: 720;
     letter-spacing: -0.01em;
   }
 
-  .about__body .about__company {
-    margin-top: 0.2rem;
-    color: var(--muted);
+  .about__body .about__promise {
+    margin-top: 0.75rem;
+    color: var(--text);
   }
 
-  .about__promise {
-    color: var(--text);
+  .about__link {
+    margin-top: 1rem;
+    font-weight: 650;
   }
 
   .request {

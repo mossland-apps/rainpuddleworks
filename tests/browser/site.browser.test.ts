@@ -94,6 +94,35 @@ describe('layout', () => {
   });
 });
 
+describe('About page', () => {
+  it('actually loads the founder photo', async () => {
+    const page = await openPage('/about/', 1280, 900);
+    const photo = page.locator('#who-we-are img');
+    await photo.scrollIntoViewIfNeeded();
+    await page.waitForFunction(
+      () => {
+        const img = document.querySelector<HTMLImageElement>('#who-we-are img');
+        return Boolean(img?.complete && img.naturalWidth > 0);
+      },
+      undefined,
+      { timeout: 10000 },
+    );
+    const box = (await photo.boundingBox())!;
+    expect(box.width).toBeGreaterThan(150);
+    expect(box.height).toBeGreaterThan(150);
+    await page.context().close();
+  });
+
+  it('stacks the founder photo above the text on a phone', async () => {
+    const page = await openPage('/about/', 390, 844);
+    const photo = (await page.locator('#who-we-are img').boundingBox())!;
+    const name = (await page.locator('.founder__name').boundingBox())!;
+    expect(photo.y + photo.height).toBeLessThanOrEqual(name.y + 1);
+    expect(photo.width).toBeLessThanOrEqual(390);
+    await page.context().close();
+  });
+});
+
 describe('request form', () => {
   it('explains what is missing instead of sending an empty request', async () => {
     const page = await openPage('/');
